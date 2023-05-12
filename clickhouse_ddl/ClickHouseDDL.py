@@ -506,9 +506,8 @@ class ClickHouseDDL(object):
         files = []
 
         # Create result path
-        if os.path.exists(path):
-            shutil.rmtree(path)
-        os.mkdir(path)
+        if not os.path.exists(path):
+            os.mkdir(path)
 
         # Tables
         for db in self.Tables.keys():
