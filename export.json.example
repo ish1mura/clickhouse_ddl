@@ -1,0 +1,12 @@
+{
+    "threads": 8,
+    "path_git": "git",
+    "new_line": "\n",
+    "connect": {
+        "host": "localhost",
+        "port": 9000,
+        "database": "default",
+        "username": "user_name",
+        "password": "pass_word"
+    }
+}
