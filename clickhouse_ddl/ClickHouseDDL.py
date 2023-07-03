@@ -68,7 +68,9 @@ class ClickHouseDDL(object):
             database        = Config.Connect.get('database'),
             user            = Config.Connect.get('username'),
             password        = Config.Connect.get('password'),
-            connect_timeout = 86400
+            connect_timeout = 86400,
+            secure          = (Config.Connect.get('secure') is True),
+            ca_certs        = Config.Connect.get('cacert')
         ) as ch:
             columns = None
             for row in ch.execute_iter(query, params, with_column_types=True, types_check=True):
