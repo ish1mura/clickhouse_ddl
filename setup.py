@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="clickhouse_ddl",
-    version="1.0.3",
+    version="1.0.4",
     author="ish1mura",
     author_email="ek.dummy@gmail.com",
     description="Clickhouse metadata (DDL) grabber",
