@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 
-import os, re, json, shutil
+import os, re, json
 from multiprocessing import Pool
 from clickhouse_driver import Client
 from clickhouse_ddl.Config import Config
@@ -245,7 +245,7 @@ class ClickHouseDDL(object):
             else:
                 start_text = f"CREATE VIEW {full_name}{Config.NL}({Config.NL}"
                 start_text_offset = 0
-                end_text = f") AS{Config.NL}("
+                end_text = f"){Config.NL}AS ("
 
             start_ind = ddl.find(start_text)-start_text_offset
             if start_ind < 0:
@@ -259,7 +259,7 @@ class ClickHouseDDL(object):
 
             ddl = ddl.replace(ddl[start_ind:end_idx], "")
 
-            return ddl.replace(f"{Config.NL}(SELECT", f"({Config.NL}SELECT")
+            return ddl.replace(f"{Config.NL}AS (SELECT", f" AS({Config.NL}SELECT")
 
         self.Views = {}
         for view in self.GetData("""
