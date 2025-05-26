@@ -395,8 +395,8 @@ class ClickHouseDDL(object):
 
         for row in self.GetData("SELECT * FROM system.users"):
             user_name = row.get("name")
-            auth_type = (row.get("auth_type") or "").strip().lower()
-            auth_params = (row.get("auth_params") or "").strip()
+            auth_type = row.get("auth_type") or []
+            auth_params = row.get("auth_params") or []
 
             ddl = f"-- User: {user_name}"
             ddl += Config.NL + Config.NL
@@ -407,11 +407,18 @@ class ClickHouseDDL(object):
 
             if len(auth_type) <= 0:
                 ddl += "  NOT IDENTIFIED"
-            elif auth_type == "ldap" and auth_params not in ("", "{}"):
-                server = json.loads(auth_params).get("server")
-                ddl += f"  IDENTIFIED WITH {auth_type} SERVER '{server}'"
             else:
-                ddl += f"  IDENTIFIED WITH {auth_type}"
+                for i, at in enumerate(auth_type):
+                    if i >= len(auth_params):
+                        continue
+                    ap = auth_params[i].strip().lower()
+                    at = at.strip().lower()
+
+                    if at == "ldap" and ap not in ("", "{}"):
+                        server = json.loads(ap).get("server")
+                        ddl += f"  IDENTIFIED WITH {at} SERVER '{server}'"
+                    else:
+                        ddl += f"  IDENTIFIED WITH {at}"
 
             ddl += ';' + Config.NL + Config.NL
 
