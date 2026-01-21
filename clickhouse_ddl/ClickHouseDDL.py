@@ -314,10 +314,16 @@ class ClickHouseDDL(object):
 
     def GetRoleGrants(self):
         self.RoleGrants = {}
-        for row in self.GetData("SELECT * FROM system.role_grants ORDER BY granted_role_name, user_name"):
-            role_parent = row.get("granted_role_name")
-            role_child = row.get("user_name")
-            ddl = "GRANT {0} TO {1};".format(role_parent, role_child)
+        for row in self.GetData("""
+            SELECT
+                g.granted_role_name as child,
+                coalesce(g.user_name, g.role_name) as parent
+            FROM system.role_grants g
+            ORDER BY 1,2
+        """):
+            role_parent = row.get("parent")
+            role_child = row.get("child")
+            ddl = "GRANT {0} TO {1};".format(role_child, role_parent)
 
             if role_parent not in self.RoleGrants.keys():
                 self.RoleGrants[role_parent] = []
