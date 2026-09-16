@@ -4,6 +4,6 @@ SET ENV=.venv
 rmdir /S /Q "%CWD%%ENV%"
 "python.exe" -m venv "%CWD%%ENV%"
 
-"%CWD%%ENV%/Scripts/pip" install clickhouse_driver
+"%CWD%%ENV%/Scripts/pip" install -r requirements.txt
 
 pause
