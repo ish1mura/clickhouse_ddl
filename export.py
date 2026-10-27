@@ -1,16 +1,37 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 
-import os,json
-from clickhouse_ddl.Config import Config
+from argparse import ArgumentParser
+import os
 from clickhouse_ddl.ClickHouseDDL import ClickHouseDDL
 
+PATH_CURRENT = os.path.dirname(os.path.abspath(__file__))
+
 if __name__ == '__main__':
-    path_current = os.path.dirname(os.path.abspath(__file__))
+    parser = ArgumentParser()
 
-    # Read config
-    with open(os.path.join(path_current, "export.json")) as rf:
-        Config.Parse(json.load(rf))
+    parser.add_argument(
+        "-c", "--config",
+        help = "Path to config file",
+        default = os.path.join(PATH_CURRENT, "config.json"),
+    )
 
-    # Export DDL to folder
-    ddl = ClickHouseDDL(os.path.join(path_current, "result"))
+    parser.add_argument(
+        "-n", "--connect",
+        help = "Connect name from config file",
+        default = "default",
+    )
+
+    parser.add_argument(
+        "-f", "--folder",
+        help = "Path to result folder",
+        default = os.path.join(PATH_CURRENT, "result"),
+    )
+
+    args = parser.parse_args()
+
+    ClickHouseDDL(
+        path_config  = args.config,
+        path_result  = args.folder,
+        connect_name = args.connect,
+    )

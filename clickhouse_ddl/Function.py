@@ -24,9 +24,9 @@ class Function(object):
             self.Definition = self.Definition[1:-1]
 
     def GetDDL(self):
-        ddl = "-- Function: {0}".format(self.Name)
+        ddl = f"-- Function: {self.Name}"
         ddl += Config.NL + Config.NL
-        ddl += "-- DROP FUNCTION IF EXISTS {0};".format(self.Name)
+        ddl += f"-- DROP FUNCTION IF EXISTS {self.Name};"
         ddl += Config.NL + Config.NL
         ddl += f"CREATE FUNCTION {self.Name} AS"
         ddl += Config.NL

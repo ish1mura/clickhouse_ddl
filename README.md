@@ -15,42 +15,58 @@ Clickhouse metadata (DDL) grabber
 pip install clickhouse_ddl
 ```
 
-# Usage
+# Config file
 
-Example script in this project:
-
-1. Copy `export.json.example` file to `export.json`
-2. Set your Clickhouse database connection params
-3. Run `export.py`
-
-Code:
-
-```python
-#!/usr/local/bin/python
-# -*- coding: utf-8 -*-
-
-import os
-from clickhouse_ddl.Config import Config
-from clickhouse_ddl.ClickHouseDDL import ClickHouseDDL
-
-if __name__ == '__main__':
-    Config.Parse({
-        "threads": 8,
-        "path_git": "git",
-        "new_line": "\n",
-        "connect": {
+```jsonc
+{
+    // Connects (Required)
+    "connects": {
+        "default": {
             "host": "localhost",
             "port": 9000,
             "database": "default",
-            "username": "user_name",
-            "password": "pass_word"
+            "username": "some_user",
+            "password": "some_password"
         }
-    })
+    },
 
-    # Export to folder
-    path_result = os.path.join(os.path.dirname(os.path.abspath(__file__)), "result")
-    ddl = ClickHouseDDL(path_result)
+    // File writing threads (Optional)
+    "threads": 8,
+
+    // Newline symbol in files (Optional)
+    "new_line": "\n"
+}
 ```
+
+# Export DB to files
+
+From command-line:
+
+```bash
+python "export.py" -h
+#   usage: export.py [-h] [-c CONFIG] [-n CONNECT] [-f FOLDER]
+#   options:
+#       -h, --help            show this help message and exit
+#       -c, --config CONFIG   Path to config file
+#       -n, --connect CONNECT Connect name from config file
+#       -f, --folder FOLDER   Path to result folder
+
+python "export.py" -c /some/path/to/config.json -n connect_name -f /some/path/to/result
+```
+
+From python script:
+
+```py
+from clickhouse_ddl.ClickHouseDDL import ClickHouseDDL
+
+ClickHouseDDL(
+    path_config  = "/some/path/to/config.json",
+    path_result  = "/some/path/to/result",
+    connect_name = "connect_name",
+)
+```
+
+Check files in `/some/path/to/result`.
 
 # Links
 
